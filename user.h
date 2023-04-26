@@ -40,6 +40,8 @@ public:
         phoneNum = phone;
 
     }
+    void Register();
+    void login();
 
 
 };
