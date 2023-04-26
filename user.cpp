@@ -140,7 +140,7 @@ void user::Register()
                 cout << "==================================\n";
                 cout << endl;
 
-                main();
+                break;
 
             }
             else
