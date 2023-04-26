@@ -36,14 +36,12 @@ int main()
         //Login
         else if(option == "1")
         {
-            user user;
-            user::login();
+            login();
         }
         //Create Account
         else if(option == "2")
         {
-            user newuser;
-            user::Register();
+            createAccount();
         }
         //Not an option
         else
