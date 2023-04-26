@@ -69,22 +69,6 @@ void user::Register()
     //checking if username is taken or not
     while(oo)
     {
-        string choice;
-        cout << "Do you want to start registering? (yes/no): ";
-        cin >> choice;
-        if (choice != "yes" && choice != "no" )
-        {
-            cout << "Invalid answer. Try again." << endl;
-            cout << "Do you want to start registering? (yes/no): ";
-            cin >> choice;
-        }
-        if(choice == "no")
-        {
-            main();
-        }
-
-        cout << endl;
-
         cout << "Username: ";
         cin >> newUsername;
 
