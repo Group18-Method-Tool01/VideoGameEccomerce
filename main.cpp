@@ -4,7 +4,7 @@
 #include <sstream>
 #include <algorithm>
 #include <vector>
-//#include "user.h"
+#include "user.h"
 
 using namespace std;
 
@@ -36,12 +36,14 @@ int main()
         //Login
         else if(option == "1")
         {
-            login();
+            user user;
+            user::login();
         }
         //Create Account
         else if(option == "2")
         {
-            createAccount();
+            user newuser;
+            user::Register();
         }
         //Not an option
         else
