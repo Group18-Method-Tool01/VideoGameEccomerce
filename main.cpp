@@ -58,15 +58,12 @@ int main()
         //Login
         else if(option == "1")
         {
-            /*user user;
-            user.login();*/
+
             login(users);
         }
         //Create Account
         else if(option == "2")
         {
-            //user newuser;
-            // newuser.Register();
             createAccount(users);
         }
         //Not an option
@@ -84,7 +81,7 @@ int main()
 //create account function that utilize passed by reference to modify actual content
 void createAccount(vector<user>& users)
 {
-    string newUsername, checkUserID, newPassword, confirmPassword, firstName, lastName, phoneNum, email;
+    string newUsername, checkUsername, newPassword, confirmPassword, firstName, lastName, phoneNum, email;
     int checkPassSize; //int variable to store new password length to validate
     bool oo = true;
     bool valid = true; //Boolean to check if username is valid
@@ -177,16 +174,34 @@ void createAccount(vector<user>& users)
                 }
             }
         }
-        
+
     }
-    
+
 
 }
 
 void login(vector<user>& users)
 {
+    bool oo = true;
+    while(oo)
+    {
+        string choice;
+        cout << "Do you want to continue logging in? (yes/no): "; //make sure user didn't choose the wrong menu option
+        cin >> choice;
+        if(choice != "yes" && choice != "no") //if not yes and no
+        {
+            cout << "Invalid answer. Try again." << endl;
+            cout << "Do you want to continue logging in? (yes/no): ";
+            cin >> choice;
+        }
+        if (choice == "no")
+        {
+            return; //break from function and go back to main
+        }
+        oo = false;
+    }
     int exist;
-    string logUsername, logPassword;
+    string logUsername, logPassword, userFirst;
     cout << "Enter the username: ";
     cin >> logUsername;
     cout << "Enter the password: ";
@@ -197,6 +212,7 @@ void login(vector<user>& users)
     {
         if(users[i].getUserID() == logUsername && users[i].getPassword() == logPassword)
         {
+            userFirst = users[i].getFirst();
             exist = 1;
         }
     }
@@ -204,8 +220,10 @@ void login(vector<user>& users)
     if(exist == 1)
     {
         cout << endl;
+        cout << "Logging in...";
+        cout << endl;
         cout << "===================" << endl;
-        cout << "Login Successfully!" << endl;
+        cout << "Welcome " << userFirst << endl;
         cout << "===================" << endl;
     }
     else
