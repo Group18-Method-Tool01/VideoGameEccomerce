@@ -1,9 +1,12 @@
-#include "user.h"
 #include <iostream>
 #include <cstdlib>
-#include <vector>
-#include <string>
 #include <fstream>
+#include <sstream>
+#include <algorithm>
+#include <vector>
+#include "user.h"
+
+using namespace std;
 
 //constructor; initializing everything to empty string
 user::user()
@@ -25,4 +28,3 @@ user::user(string n, string pw, string firstname, string lastname, string e, str
     email = e;
     phoneNum = phone;
 }
-
