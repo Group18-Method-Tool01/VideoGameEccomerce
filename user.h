@@ -28,7 +28,7 @@ public:
     string getLast() {return lname;}
     string getEmail() {return email;}
     string getPhone() {return phoneNum;}
-   // int Register();
+    // int Register();
 
     void updateAccount(string n, string pw, string firstname, string lastname, string e, string phone)
     {
@@ -40,8 +40,6 @@ public:
         phoneNum = phone;
 
     }
-    //void Register();
-    //void login();
 
 
 };
