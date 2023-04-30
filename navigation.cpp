@@ -47,10 +47,11 @@ void Navigation::mainmenu()
     cout << "2. Create Account" << endl;
     cout << "3. Exit" << endl;
 
-    cout << "Choose an option: ";  //prompt user for an option
+    cout << "Choose an option (1-3): ";     //prompt user for an option
     cin >> option;
     cout << endl;
 
+    //utilize switch case to peform certain action base on user option input
     switch(option)
     {
         case 1:
@@ -66,6 +67,7 @@ void Navigation::mainmenu()
         case 3:
             {
                 exit(0);
+                break;
             }
         default:
             {
@@ -74,9 +76,11 @@ void Navigation::mainmenu()
 
     }
 
+//go back to m if the option picked was invalid
 goto m;
 }
 
+//login validation function
 void Navigation::login(vector<user>& users)
 {
     b:
@@ -94,16 +98,13 @@ void Navigation::login(vector<user>& users)
         }
         if (choice == "no")
         {
-            // You need to erase this because you basically calling this function in another function. After this function is finished, this will go back into this function.
-            // mainmenu(); //break from function and go back to main
-
 
             // You just need to return because return goes out of the function and return back to the mainmenu automatically
             return;
         }
         oo = false;
     }
-    int exist;
+    int exist = 0;
     string logUsername, logPassword, userFirst;
     user person; // Initialize the user object to know who is the person accessing the account
     cout << "Enter the username: ";
@@ -141,6 +142,7 @@ void Navigation::login(vector<user>& users)
 
 }
 
+// creating account function
 void Navigation::createAccount(vector<user>& users)
 {
     string newUsername, checkUsername, newPassword, confirmPassword, firstName, lastName, phoneNum, email;
@@ -214,7 +216,7 @@ void Navigation::createAccount(vector<user>& users)
                     user temp(newUsername, newPassword, firstName, lastName, email, phoneNum);
                     users.push_back(temp);
 
-                    //write the contents in the file
+                    //write the contents in the file in append mode
                     fstream users;
                     users.open("accounts.txt", ios::app);
                     if(users.is_open())
@@ -230,6 +232,7 @@ void Navigation::createAccount(vector<user>& users)
                     mainmenu();
 
                 }
+                //did not pass password confirmation
                 else
                 {
                     cout << "\nPassword confirmation does not match. \n" << endl;
@@ -241,7 +244,6 @@ void Navigation::createAccount(vector<user>& users)
 
 
 }
-
 
 // You could just pass users vector in as a parameter so you don't need to parse the user file again
 // You could also pass the person object so you know who is logged in
@@ -256,8 +258,6 @@ void Navigation::afterLogin(vector<user>& users, user& person)
     cout << "|____4) Logout__________|" << endl;
     cout << "=========================" << endl;
     cout << endl;
-
-    // Probably add an extra option to modify account
 
     cout << "Please select a choice: ";
     cin >> choice;
@@ -277,18 +277,21 @@ void Navigation::afterLogin(vector<user>& users, user& person)
             }
         case 3:
             {
+                //call manageProfile function
                 manageProfile(users, person);
                 break;
 
             }
         case 4:
             {
+                //call back to the mainmenu() function
                 mainmenu();
                 break;
             }
 
         default:
             {
+                //choice not in the choice option
                 cout << endl;
                 cout << "Invalid Choice. Please try again." << endl << endl;
                 goto r;
@@ -311,18 +314,18 @@ void Navigation::manageProfile(vector<user>& users, user& person)
     b:
     cout << "Please enter userID to proceed: ";
     cin >> ID;
-    for(unsigned int i = 0; i < users.size(); i++)
-    {
-        if(users[i].getUserID() == ID)
+    /*for(unsigned int i = 0; i < users.size(); i++)
+    {*/
+        if(person.getUserID() == ID)
         {
             r:
             //creating each variable to store the information from user profile
-            profileID = users[i].getUserID();
-            profilePW = users[i].getPassword();
-            profileFirst = users[i].getFirst();
-            profileLast = users[i].getLast();
-            profileEmail = users[i].getEmail();
-            profilePhone = users[i].getPhone();
+            profileID = person.getUserID();
+            profilePW = person.getPassword();
+            profileFirst = person.getFirst();
+            profileLast = person.getLast();
+            profileEmail = person.getEmail();
+            profilePhone = person.getPhone();
             int choice;
 
             cout << "======================================" << endl;
@@ -362,8 +365,9 @@ void Navigation::manageProfile(vector<user>& users, user& person)
                         cout << "4. Last Name" << endl;
                         cout << "5. Email" << endl;
                         cout << "6. Phone#" << endl;
+                        cout << "SELECT 7 to GO BACK" << endl;
                         cout << endl;
-                        cout << "Select an option: ";
+                        cout << "Select an option (1-7) : ";
                         cin >> option;
                         switch(option)
                         {
@@ -390,6 +394,7 @@ void Navigation::manageProfile(vector<user>& users, user& person)
                                                 if (users[i].getUserID() == person.getUserID()) // Check to see if the user in the list equal to the user. Note* if this doesn't work you could check to see if the username is the same
                                                 {
                                                     users[i].setUserID(changeID);
+                                                    person.setUserID(changeID);
                                                     cout << "UserID successfully changed!" << endl;
                                                 }
                                             }
@@ -397,6 +402,7 @@ void Navigation::manageProfile(vector<user>& users, user& person)
                                         }
                                     }
                                     goto w;
+                                    break;
 
                                 }
                             case 2:
@@ -406,18 +412,21 @@ void Navigation::manageProfile(vector<user>& users, user& person)
                                     cout << "Enter new password: ";
                                     cin >> changePW;
                                     cout << "Confirm new password: ";
+                                    cin >> confirmPW;
                                     if(changePW == confirmPW)
                                     {
                                         for(unsigned int i = 0; i < users.size(); i++)
                                         {
                                             if(users[i].getUserID() == person.getUserID())
                                             {
-                                                users[i].setUserID(changePW);
+                                                users[i].setPassword(changePW);
+                                                person.setPassword(changePW);
                                                 cout << "Password successfully changed!" << endl;
                                             }
                                         }
                                     }
                                     goto w;
+                                    break;
 
 
                                }
@@ -431,10 +440,12 @@ void Navigation::manageProfile(vector<user>& users, user& person)
                                         if(users[i].getUserID() == person.getUserID())
                                         {
                                             users[i].setFirst(changeFirst);
+                                            person.setFirst(changeFirst);
                                             cout << "First name successfully changed!" << endl;
                                         }
                                     }
                                     goto w;
+                                    break;
 
                                 }
                             case 4:
@@ -446,11 +457,14 @@ void Navigation::manageProfile(vector<user>& users, user& person)
                                     {
                                         if(users[i].getUserID() == person.getUserID())
                                         {
-                                            users[i].setFirst(changeLast);
+                                            users[i].setLast(changeLast);
+                                            person.setLast(changeLast);
+
                                             cout << "Last name successfully changed!" << endl;
                                         }
                                     }
                                     goto w;
+                                    break;
                                 }
                             case 5:
                                 {
@@ -461,27 +475,40 @@ void Navigation::manageProfile(vector<user>& users, user& person)
                                     {
                                         if(users[i].getUserID() == person.getUserID())
                                         {
-                                            users[i].setFirst(changeEmail);
+                                            users[i].setEmail(changeEmail);
+                                            person.setEmail(changeEmail);
+
                                             cout << "Email successfully changed!" << endl;
                                         }
                                     }
                                     goto w;
+                                    break;
                                 }
                             case 6:
                                 {
                                     string changePhone;
-                                    cout << "Enter new email: ";
+                                    cout << "Enter new phone number: ";
                                     cin >> changePhone;
                                     for(unsigned int i = 0; i < users.size(); i++)
                                     {
                                         if(users[i].getUserID() == person.getUserID())
                                         {
-                                            users[i].setFirst(changePhone);
-                                            cout << "Email successfully changed!" << endl;
+                                            users[i].setPhone(changePhone);
+                                            person.setPhone(changePhone);
+                                            cout << "Phone number successfully changed!" << endl;
                                         }
                                     }
                                     goto w;
+                                    break;
                                  }
+                        case 7:
+                        {
+                            goto r;
+                            break;
+                        }
+
+
+
 
                             default:
                                 {
@@ -497,11 +524,13 @@ void Navigation::manageProfile(vector<user>& users, user& person)
                         {
                             if(user.is_open())
                             {
-                                user << users[i].getUserID() << " " << users[i].getPassword() << " " << users[i].getFirst() << " " << users[i].getLast() << " " << users[i].getEmail() << " " << users[i].getPassword() << endl;
-                                user.close();
+                                user << users[i].getUserID() << " " << users[i].getPassword() << " " << users[i].getFirst() << " " << users[i].getLast() << " " << users[i].getEmail() << " " << users[i].getPhone() << endl;
+
                             }
                         }
+                        user.close();
                         goto r;
+                        break;
 
 
                     }
@@ -521,6 +550,7 @@ void Navigation::manageProfile(vector<user>& users, user& person)
                  case 4:
                      {
                         afterLogin(users, person);
+                        break;
                      }
 
                  default:
@@ -535,7 +565,7 @@ void Navigation::manageProfile(vector<user>& users, user& person)
 
         exist = 1;
         }
-    }
+    //}
 
     cout << "UserID does not match. Please try again." << endl;
     goto b;
