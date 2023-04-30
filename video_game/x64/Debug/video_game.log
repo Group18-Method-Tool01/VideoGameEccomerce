@@ -1,0 +1,3 @@
+﻿  Main.cpp
+C:\Users\ladar\source\repos\VideoGameEccomerce\video_game\Main.cpp(239,49): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  video_game.vcxproj -> C:\Users\ladar\Source\Repos\VideoGameEccomerce\video_game\x64\Debug\video_game.exe

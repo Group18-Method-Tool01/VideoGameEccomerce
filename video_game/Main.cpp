@@ -84,19 +84,72 @@ int main()
             //View Cart
             else if (opt == "1")
             {
-                
+                //waiting on cart class to get made, so we can add this option
             }
 
             //Manage Profiles
             else if (opt == "2")
             {
+                string newUserId;
+                string newPassword;
+                string newFirstName;
+                string newLastName;
+                string newEmail;
+                string newPhone;
 
+                int exist2 = 0;
+                string UserID, Password;
+                cout << "Enter your current username: ";
+                cin >> UserID;
+                cout << "Enter your current password: ";
+                cin >> Password;
+
+                //loop through users vector and see if there is a matching user
+                int num = 0;
+                while (num == 0)
+                {
+                    for (unsigned int i = 0; i < users.size(); i++)
+                    {
+                        if (users[i].getUserID() == UserID && users[i].getPassword() == Password)
+                        {
+                            cout << "Enter New ID: " << endl;
+                            cin >> newUserId;
+                            cout << "Enter New Password: " << endl;
+                            cin >> newPassword;
+                            cout << "Enter New First Name: " << endl;
+                            cin >> newFirstName;
+                            cout << "Enter New Last Name: " << endl;
+                            cin >> newLastName;
+                            cout << "Enter New Email: " << endl;
+                            cin >> newEmail;
+                            cout << "Enter New Phone Number: " << endl;
+                            cin >> newPhone;
+
+                            users[i].updateAccount(newUserId, newPassword, newFirstName, newLastName, newEmail, newPhone);
+                            exist2 = 1;
+
+                        }
+                    }
+
+                    if (exist2 == 1)
+                    {
+                        cout << endl;
+                        cout << ".......Update Complete......." << endl;
+                        cout << endl;
+                        num = 1;
+                    }
+                    else
+                    {
+                        cout << "Login Error. Incorrect username or password." << endl;
+                    }
+                }
             }
 
             //Logout
             else if (opt == "3")
             {
                 cout << "Logging out...." << endl;
+                main();
 
             }
 
@@ -245,7 +298,7 @@ void login(vector<user>& users)
         {
             cout << "Invalid answer. Try again." << endl;
             cout << "Do you want to continue logging in? (yes/no): ";
-            cin >> choice;
+            cin >> choice;      
         }
         if (choice == "no")
         {
@@ -253,12 +306,13 @@ void login(vector<user>& users)
         }
         oo = false;
     }
-    int exist;
+    int exist = 0;
     string logUsername, logPassword, userFirst;
     cout << "Enter the username: ";
     cin >> logUsername;
     cout << "Enter the password: ";
     cin >> logPassword;
+    cout << endl;
 
     //loop through users vector and see if there is a matching user
     for (unsigned int i = 0; i < users.size(); i++)
@@ -282,6 +336,7 @@ void login(vector<user>& users)
     else
     {
         cout << "Login Error. Incorrect username or password." << endl;
+        login(users);
     }
 
 
