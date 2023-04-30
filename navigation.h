@@ -12,9 +12,9 @@ public:
     void mainmenu();
     void login(vector<user>& users);
     void createAccount(vector<user>& users);
-    void afterLogin();
+    void afterLogin(vector<user>& users, user& person);
     void browseGame();
-    void manageProfile(vector<user>& users);
+    void manageProfile(vector<user>& users, user& person);
 };
 
 #endif // NAVIGATION_H

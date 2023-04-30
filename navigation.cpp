@@ -94,12 +94,18 @@ void Navigation::login(vector<user>& users)
         }
         if (choice == "no")
         {
-            mainmenu(); //break from function and go back to main
+            // You need to erase this because you basically calling this function in another function. After this function is finished, this will go back into this function.
+            // mainmenu(); //break from function and go back to main
+
+
+            // You just need to return because return goes out of the function and return back to the mainmenu automatically
+            return;
         }
         oo = false;
     }
     int exist;
     string logUsername, logPassword, userFirst;
+    user person; // Initialize the user object to know who is the person accessing the account
     cout << "Enter the username: ";
     cin >> logUsername;
     cout << "Enter the password: ";
@@ -111,6 +117,7 @@ void Navigation::login(vector<user>& users)
         if(users[i].getUserID() == logUsername && users[i].getPassword() == logPassword)
         {
             userFirst = users[i].getFirst();
+            person = users[i]; // Make a new user object that stores the user
             exist = 1;
         }
     }
@@ -123,7 +130,7 @@ void Navigation::login(vector<user>& users)
         cout << "=========================" << endl;
         cout << "Welcome " << userFirst << endl;
         cout << "=========================" << endl;
-        afterLogin();
+        afterLogin(users, person); // you could pass users vector in as a argument as well as the user object to know who is logged in
     }
     else
     {
@@ -235,26 +242,13 @@ void Navigation::createAccount(vector<user>& users)
 
 }
 
-void Navigation::afterLogin()
+
+// You could just pass users vector in as a parameter so you don't need to parse the user file again
+// You could also pass the person object so you know who is logged in
+void Navigation::afterLogin(vector<user>& users, user& person)
 {
-    //creating a user class vector to store all the user class object
-    vector<user> users;
-
-    //parsing through text file and store everything in the vector
-    ifstream openfile;
-    openfile.open("accounts.txt");
-    string id, pw, fn, ln, em, ph;
-    while(openfile >> id >> pw >> fn >> ln >> em >>ph)
-    {
-        //make a user class and store all information
-        user temp(id, pw, fn, ln, em, ph);
-
-        //push the user class into the vector
-        users.push_back(temp);
-    }
     r:
     int choice;
-    //Menu option available after user successfully logged in
     cout << "=========================" << endl;
     cout << "|____1) Browse Game ____|" << endl;
     cout << "|____2) View Cart ______|" << endl;
@@ -262,6 +256,8 @@ void Navigation::afterLogin()
     cout << "|____4) Logout__________|" << endl;
     cout << "=========================" << endl;
     cout << endl;
+
+    // Probably add an extra option to modify account
 
     cout << "Please select a choice: ";
     cin >> choice;
@@ -281,7 +277,7 @@ void Navigation::afterLogin()
             }
         case 3:
             {
-                manageProfile(users);
+                manageProfile(users, person);
                 break;
 
             }
@@ -290,6 +286,7 @@ void Navigation::afterLogin()
                 mainmenu();
                 break;
             }
+
         default:
             {
                 cout << endl;
@@ -301,21 +298,13 @@ void Navigation::afterLogin()
     }
 }
 
-//function to display all the game in store for user to buy and add to cart
 void Navigation::browseGame()
 {
-    /*
-     *
-     * try to utilize an inventory class creating a vector<inventory> obj of each game that has item name, itemID, qty_in_stock, price_each
-     * Also create a inventory.txt file to store each information like with the user's information done earlier
-     *
-     */
     cout << "hello...."<< endl;
     //CODE NEEDED for displaying all the game to the user;
 }
 
-//function to let user manage their profile
-void Navigation::manageProfile(vector<user>& users)
+void Navigation::manageProfile(vector<user>& users, user& person)
 {
     int exist;
     string ID, profileID, profilePW, profileFirst, profileLast, profileEmail, profilePhone;
@@ -353,9 +342,8 @@ void Navigation::manageProfile(vector<user>& users)
             {
                 case 1:
                     {   s:
-                        //displaying current information on user's account
                         cout << "================================" << endl;
-                        cout << "         Manage Profile         " << endl;
+                        cout << "       Account Information      " << endl;
                         cout << "================================" << endl;
                         cout << "UserID: " << profileID << endl;
                         cout << "Password: *******" << endl;
@@ -365,7 +353,6 @@ void Navigation::manageProfile(vector<user>& users)
                         cout << "Phone#: " << profilePhone << endl;
                         cout << "================================" << endl;
 
-                        //displaying options and asking users what they would like to change in profile
                         int option;
                         cout << endl;
                         cout << "What would you like to change?" << endl;
@@ -375,12 +362,9 @@ void Navigation::manageProfile(vector<user>& users)
                         cout << "4. Last Name" << endl;
                         cout << "5. Email" << endl;
                         cout << "6. Phone#" << endl;
-                        cout << "SELECT 7 to GO BACK" << endl;
                         cout << endl;
                         cout << "Select an option: ";
                         cin >> option;
-
-                        //base on their option use a switch case to revise each scenario
                         switch(option)
                         {
                             case 1:
@@ -400,10 +384,19 @@ void Navigation::manageProfile(vector<user>& users)
                                         //new userID not taken
                                         if(valid)
                                         {
-                                            cout << "UNFINISH CODING!!!" << endl;
-                                            //modify in vector and change in accounts.txt file
+                                            // This modifies the user vector
+                                            for (unsigned int i = 0; i < users.size(); i++)
+                                            {
+                                                if (users[i].getUserID() == person.getUserID()) // Check to see if the user in the list equal to the user. Note* if this doesn't work you could check to see if the username is the same
+                                                {
+                                                    users[i].setUserID(changeID);
+                                                    cout << "UserID successfully changed!" << endl;
+                                                }
+                                            }
+
                                         }
                                     }
+                                    goto w;
 
                                 }
                             case 2:
@@ -415,57 +408,80 @@ void Navigation::manageProfile(vector<user>& users)
                                     cout << "Confirm new password: ";
                                     if(changePW == confirmPW)
                                     {
-                                        cout << "UNFINISH CODING!!!!" << endl;
-                                        //modify password in vector and accounts.txt
+                                        for(unsigned int i = 0; i < users.size(); i++)
+                                        {
+                                            if(users[i].getUserID() == person.getUserID())
+                                            {
+                                                users[i].setUserID(changePW);
+                                                cout << "Password successfully changed!" << endl;
+                                            }
+                                        }
                                     }
+                                    goto w;
 
 
                                }
                             case 3:
                                 {
                                     string changeFirst;
-                                    cout << "Enter new firstname: ";
+                                    cout << "Enter new first name: ";
                                     cin >> changeFirst;
-                                    cout << "UNFINISH CODING!!!" << endl;
-                                    /*
-                                     *NOT FINISH , modify firstname of the corresponding user in vector and accounts.txt
-                                     *
-                                     */
-                                    cout << "Changes successfully made." << endl;
-                                    goto r;
+                                    for(unsigned int i = 0; i < users.size(); i++)
+                                    {
+                                        if(users[i].getUserID() == person.getUserID())
+                                        {
+                                            users[i].setFirst(changeFirst);
+                                            cout << "First name successfully changed!" << endl;
+                                        }
+                                    }
+                                    goto w;
+
                                 }
                             case 4:
                                 {
                                     string changeLast;
-                                    cout << "Enter new lastname: ";
+                                    cout << "Enter new last name: ";
                                     cin >> changeLast;
-                                    cout << "UNFINISH CODING!!!" << endl;
-                                    /*
-                                     * NOT FINISH, modify lastname of the corresponding user in vector and accounts.txt
-                                     *
-                                     */
-                                    cout << "Changes successfully made." << endl;
-                                    goto r;
+                                    for(unsigned int i = 0; i < users.size(); i++)
+                                    {
+                                        if(users[i].getUserID() == person.getUserID())
+                                        {
+                                            users[i].setFirst(changeLast);
+                                            cout << "Last name successfully changed!" << endl;
+                                        }
+                                    }
+                                    goto w;
                                 }
                             case 5:
                                 {
                                     string changeEmail;
                                     cout << "Enter new email: ";
                                     cin >> changeEmail;
-                                    cout << "UNFINISH CODING!!!" << endl;
-                                    //NOT FINISH, modify email of the corresponding user in vector and accounts.txt
+                                    for(unsigned int i = 0; i < users.size(); i++)
+                                    {
+                                        if(users[i].getUserID() == person.getUserID())
+                                        {
+                                            users[i].setFirst(changeEmail);
+                                            cout << "Email successfully changed!" << endl;
+                                        }
+                                    }
+                                    goto w;
                                 }
                             case 6:
                                 {
-                                    cout << "UNFINISH CODING!!!" << endl;
-                                    //NOT FINISH
-                                }
-                            case 7:
-                                {
-                                    //return to main manage profile page, exit from current program
-                                    goto r;
-                                    break;
-                                }
+                                    string changePhone;
+                                    cout << "Enter new email: ";
+                                    cin >> changePhone;
+                                    for(unsigned int i = 0; i < users.size(); i++)
+                                    {
+                                        if(users[i].getUserID() == person.getUserID())
+                                        {
+                                            users[i].setFirst(changePhone);
+                                            cout << "Email successfully changed!" << endl;
+                                        }
+                                    }
+                                    goto w;
+                                 }
 
                             default:
                                 {
@@ -474,6 +490,19 @@ void Navigation::manageProfile(vector<user>& users)
                                     goto s;
                                 }
                         }
+                        w:
+                        fstream user;
+                        user.open("accounts.txt", ios::out);
+                        for (unsigned int i = 0; i < users.size(); i++)
+                        {
+                            if(user.is_open())
+                            {
+                                user << users[i].getUserID() << " " << users[i].getPassword() << " " << users[i].getFirst() << " " << users[i].getLast() << " " << users[i].getEmail() << " " << users[i].getPassword() << endl;
+                                user.close();
+                            }
+                        }
+                        goto r;
+
 
                     }
                  case 2:
@@ -489,11 +518,10 @@ void Navigation::manageProfile(vector<user>& users)
                         //CODE NEEDED for removing account and all its information from file;
 
                      }
-                case 4:
-                    {
-                        afterLogin();
-                        break;
-                    }
+                 case 4:
+                     {
+                        afterLogin(users, person);
+                     }
 
                  default:
                      {
