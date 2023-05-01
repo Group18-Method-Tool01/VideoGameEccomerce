@@ -2,6 +2,8 @@
 #define NAVIGATION_H
 
 #include "user.h"
+#include "videogame.h"
+
 
 class Navigation
 {
@@ -15,6 +17,10 @@ public:
     void afterLogin(vector<user>& users, user& person);
     void browseGame();
     void manageProfile(vector<user>& users, user& person);
+    void displayInventory(vector<videoGame> &games);
+    void readInventory(vector<videoGame> &games);
+    void buymenu();
+
 };
 
 #endif // NAVIGATION_H

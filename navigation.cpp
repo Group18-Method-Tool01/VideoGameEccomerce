@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <vector>
 #include "user.h"
+#include "videogame.h"
+
 using namespace std;
 
 Navigation::Navigation()
@@ -18,6 +20,12 @@ void Navigation::mainmenu()
 
     //creating a user class vector to store all the user class object
     vector<user> users;
+
+    //creating a game class vector to store all the games in
+    vector<videoGame> games;
+    readInventory(games);
+
+
 
     //parsing through text file and store everything in the vector
     ifstream openfile;
@@ -249,11 +257,13 @@ void Navigation::createAccount(vector<user>& users)
 // You could also pass the person object so you know who is logged in
 void Navigation::afterLogin(vector<user>& users, user& person)
 {
+    vector<videoGame> games;
+    readInventory(games);
     r:
     int choice;
     cout << "=========================" << endl;
     cout << "|____1) Browse Game ____|" << endl;
-    cout << "|____2) View Cart ______|" << endl;
+    cout << "|____2) Buy ____________|" << endl;
     cout << "|____3) Manage Profile _|" << endl;
     cout << "|____4) Logout__________|" << endl;
     cout << "=========================" << endl;
@@ -266,12 +276,12 @@ void Navigation::afterLogin(vector<user>& users, user& person)
     {
         case 1:
             {
-                browseGame();
+                displayInventory(games);
                 break;
             }
         case 2:
             {
-                cout << "CODE NEEDED" << endl;
+                buymenu();
                 break;
                 //code needed for viewing cart item
             }
@@ -299,12 +309,6 @@ void Navigation::afterLogin(vector<user>& users, user& person)
 
 
     }
-}
-
-void Navigation::browseGame()
-{
-    cout << "hello...."<< endl;
-    //CODE NEEDED for displaying all the game to the user;
 }
 
 void Navigation::manageProfile(vector<user>& users, user& person)
@@ -573,3 +577,136 @@ void Navigation::manageProfile(vector<user>& users, user& person)
 
 
 }
+
+//display everything in store for user
+void Navigation::displayInventory(vector<videoGame> &games)
+{
+    for (unsigned int i = 0; i < games.size(); i++)
+    {
+        cout << "Title: " << games[i].getName() << "  ";
+        cout << "Cost: " << games[i].getCost() << "  ";
+        cout << "ItemNumber: " << games[i].getItemNum() << "  ";
+        cout << "Stock: " << games[i].getStock() << "  ";
+        cout << endl;
+    }
+}
+
+//function that reads everything from Inventory.txt into a vector class object
+void Navigation::readInventory(vector<videoGame> &games)
+{
+    // opens file
+    ifstream infile;
+    infile.open("Inventory.txt");
+
+    string name;
+    double cost;
+    int itemnum;
+    int stock;
+
+    while (infile >> name >> cost >> itemnum >> stock)
+    {
+        videoGame temp(name, cost, itemnum, stock);
+        games.push_back(temp);
+    }
+
+    infile.close();
+
+}
+
+//FUNCTION IS NOT WORKING CORRECTLY**********
+void Navigation::buymenu()
+{
+    vector<videoGame> games;
+    readInventory(games);
+    fstream openfile;
+
+    string gname;
+    double price;
+    int itemnum;
+    int q;
+
+
+    int arrcode[100], arrqty[100];
+    string choice;
+    int c=0;
+    float amount = 0, total = 0;
+
+    cout << "=======================================================" << endl;
+    cout << "                     RECEIPT                           " << endl;
+    cout << "=======================================================" << endl;
+
+    //displayInventory(games);
+    openfile.open("Inventory.txt", ios::in);
+    if(!openfile)
+    {
+        cout << "Empty Inventory" << endl;
+    }
+    else
+    {   openfile.close();
+        displayInventory(games);
+    cout << endl << "Please place the order..." << endl;
+    do
+    {
+        a:
+        cout << "Enter item number: ";
+        cin >> arrcode[c];
+        cout << "Enter the product quantity: ";
+        cin >> arrqty[c];
+        for(int i=0; i<c; i++)
+        {
+            if(arrcode[c]==arrcode[i])
+            {
+                cout << "\n\n Duplicate item number.Please try again.";
+                goto a;
+            }
+
+        }
+        c++;
+        cout << "\n\n Do you want to buy another product? if 'yes' PRESS 'y'";
+        cin >> choice;
+    }
+    while (choice == "y");
+
+    cout << "______________________________RECEIPT________________________________________________\n" << endl;
+    cout << "Game" << "                 " << "Price" << "           " << "ItemNum" << "         " << "Qty" << "         "  << "Amount" << endl;
+
+    for(int i =0; i<c; i++)
+    {
+        openfile.open("Inventory.txt", ios::in);
+        openfile >>gname >>price >> itemnum>> q;
+        while(!openfile.eof())
+        {
+            if(itemnum == arrcode[i])
+            {
+                amount = price*arrqty[i];
+                total = total + amount;
+                cout << endl << gname << "              "<< price << "              " << itemnum << "         " << arrqty[i] <<"         "<<  amount<< endl;
+
+            }
+            openfile >>gname >>price >> itemnum>> q;
+        }
+
+
+    }
+    openfile.close();
+}
+    cout << "\n_______________________________________________________________________________________";
+    cout << "\n Total Amount: " <<total;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
