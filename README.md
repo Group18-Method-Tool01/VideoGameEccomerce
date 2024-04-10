@@ -6,7 +6,6 @@ The user will be able to browse through a list of video games, add the games to 
 # Team Members
 - Jennie Zheng - user.cpp, navigation.cpp
 - Ladarius Course - videogame.cpp
-- John Sudkamp - cart.cpp
 - Brayden Ball - cart.cpp
 
 
